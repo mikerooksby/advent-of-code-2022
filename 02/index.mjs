@@ -9,6 +9,24 @@ const choiceMap = new Map([
   ['Z', 'SCISSORS'],
 ]);
 
+const loseMap = new Map([
+  ['ROCK', 'SCISSORS'],
+  ['PAPER', 'ROCK'],
+  ['SCISSORS', 'PAPER'],
+]);
+
+const winMap = new Map([
+  ['ROCK', 'PAPER'],
+  ['PAPER', 'SCISSORS'],
+  ['SCISSORS', 'ROCK'],
+]);
+
+const outcomeMap = new Map([
+  ['X', (opponentChoice) => loseMap.get(opponentChoice)],
+  ['Y', (opponentChoice) => opponentChoice],
+  ['Z', (opponentChoice) => winMap.get(opponentChoice)],
+]);
+
 const pointMap = new Map([
   ['ROCK', 1],
   ['PAPER', 2],
@@ -21,35 +39,17 @@ function getResultPartOne(opponent, you) {
 
   const youPoint = pointMap.get(youChoice);
 
-  if (opponentChoice === youChoice) {
-    return 3 + youPoint;
-  }
-
-  let gamePoint = 0;
-
-  if (
-    (opponentChoice === 'ROCK' && youChoice === 'PAPER') ||
-    (opponentChoice === 'PAPER' && youChoice === 'SCISSORS') ||
-    (opponentChoice === 'SCISSORS' && youChoice === 'ROCK')
-  ) {
-    gamePoint = 6;
-  }
-
-  return gamePoint + youPoint;
+ return 
 }
 
 function getResultPartTwo(opponent, you) {
   const opponentChoice = choiceMap.get(opponent);
-  const youChoice = choiceMap.get(you);
+  const youChoice = outcomeMap.get(you)(opponentChoice);
 
   const youPoint = pointMap.get(youChoice);
-
-  if (opponentChoice === youChoice) {
-    return 3 + youPoint;
-  }
 }
 
-function getPoints(inputs, getResult) {
+function getPointsPartOne(inputs, getResult) {
   const points = [];
   inputs.forEach((input) => {
     const [opponent, you] = input.split(' ');
@@ -61,13 +61,13 @@ function getPoints(inputs, getResult) {
 
 async function solvePartOne(fileName) {
   const inputs = await readInput(fileName);
-  const points = getPoints(inputs, getResultPartOne);
+  const points = getPointsPartOne(inputs, getResultPartOne);
   const totalPoints = points.reduce((s, v) => s + v);
   return totalPoints;
 }
 
 async function solvePartTwo(fileName) {
-    const inputs = await readInput(fileName);
+  const inputs = await readInput(fileName);
 }
 
 const fileName = 'sample.txt';
